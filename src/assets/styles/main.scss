@@ -1,0 +1,92 @@
+@import 'variables';
+@import 'base';
+
+.app-layout {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background-color: $primary;
+  color: white;
+  padding: 20px;
+
+  .logo {
+    margin-bottom: 30px;
+  }
+
+  .menu {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 12px;
+      cursor: pointer;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+}
+
+.header {
+  background: $card-bg;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: $card-bg;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+  }
+}
+  p {
+    font-size: 28px;
+    margin: 0;
+  }
+
+.card {
+  transition: transform 0.3s ease;
+  border-radius: 15px;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.btn-primary {
+  border-radius: 8px;
+  padding: 8px 20px;
+}
+.welcome-banner {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+}
