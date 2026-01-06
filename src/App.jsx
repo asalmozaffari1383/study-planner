@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import Tasks from './pages/Tasks';
 import Pomodoro from './pages/Pomodoro';
+import Schedule from './pages/Schedule';
 function App() {
   return (
     <div className="app-layout">
@@ -16,6 +17,7 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/pomodoro" element={<Pomodoro />} />
+          <Route path="/schedule" element={<Schedule />} />
         </Routes>
       </div>
     </div>

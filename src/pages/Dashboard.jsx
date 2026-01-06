@@ -1,29 +1,40 @@
 import { useState } from 'react';
 import DashboardCards from '../components/DashboardCards';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  // محاسبه آمار در زمان مقداردهی اولیه استیت (بهینه‌ترین حالت)
   const [stats] = useState(() => {
-    const savedCourses = JSON.parse(localStorage.getItem('study_courses') || '[]');
-    const savedTasks = JSON.parse(localStorage.getItem('study_tasks') || '[]');
+    const savedTasks = JSON.parse(localStorage.getItem('study_tasks')) || [];
+    const savedCourses = JSON.parse(localStorage.getItem('study_courses')) || [];
+
     const doneCount = savedTasks.filter(t => t.completed).length;
+    const totalPomsCount = savedTasks.reduce((acc, curr) => acc + (curr.poms || 0), 0);
 
     return {
       courses: savedCourses.length,
       done: doneCount,
-      pending: savedTasks.length - doneCount
+      pending: savedTasks.length - doneCount,
+      totalPoms: totalPomsCount
     };
   });
 
   return (
     <div className="container-fluid p-4">
-      
       <div className="welcome-banner p-5 mb-4 rounded-5 text-white shadow" 
            style={{ background: 'linear-gradient(135deg, #1e1e2f 0%, #4e73df 100%)' }}>
         <div className="row align-items-center">
           <div className="col-md-8">
             <h1 className="fw-bold display-5">Hello, Asal! ✨</h1>
-            <p className="lead opacity-75">You've completed {stats.done} tasks so far.</p>
-            <button className="btn btn-light btn-lg rounded-pill px-4 mt-2 fw-bold text-primary shadow-sm">
+            <p className="lead opacity-75">
+              You've earned <strong>{stats.totalPoms} ⭐</strong> and completed <strong>{stats.done}</strong> tasks.
+            </p>
+            <button 
+              onClick={() => navigate('/schedule')} 
+              className="btn btn-light btn-lg rounded-pill px-4 mt-2 fw-bold text-primary shadow-sm"
+            >
               View My Schedule
             </button>
           </div>
