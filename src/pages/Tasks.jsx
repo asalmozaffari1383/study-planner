@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import TaskItem from '../components/TaskItem';
 
 const Tasks = () => {
-  // ۱. گرفتن لیست درس‌ها برای منوی کشویی
   const [courses] = useState(() => {
     const saved = localStorage.getItem('study_courses');
     return saved ? JSON.parse(saved) : [];
   });
 
-  // ۲. استیت برای تسک‌ها (با قابلیت ذخیره‌سازی)
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem('study_tasks');
     return savedTasks ? JSON.parse(savedTasks) : [];
@@ -16,25 +14,32 @@ const Tasks = () => {
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [newTaskTime, setNewTaskTime] = useState(''); // ۱. استیت جدید برای زمان
 
-  // ۳. ذخیره در LocalStorage هر وقت تسک‌ها عوض شدند
   useEffect(() => {
     localStorage.setItem('study_tasks', JSON.stringify(tasks));
   }, [tasks]);
 
   const handleAddTask = (e) => {
     e.preventDefault();
-    if (!newTaskTitle || !selectedCourse) return alert("Please fill title and select a course!");
+    // چک کردن پر بودن فیلدها
+    if (!newTaskTitle || !selectedCourse || !newTaskTime) {
+        return alert("Please fill title, course and time!");
+    }
 
     const newTask = {
       id: Date.now(),
       title: newTaskTitle,
       courseName: selectedCourse,
-      completed: false
+      startTime: newTaskTime, // ۲. اضافه شدن زمان به آبجکت تسک
+      completed: false,
+      poms: 0 // تعداد ستاره‌های اولیه
     };
 
     setTasks([...tasks, newTask]);
+    // ریست کردن فرم
     setNewTaskTitle('');
+    setNewTaskTime('');
   };
 
   const toggleTask = (id) => {
@@ -47,24 +52,28 @@ const Tasks = () => {
 
   return (
     <div className="container mt-4">
-      <h3 className="mb-4">Task Management</h3>
+      <h3 className="mb-4 fw-bold">Task Management</h3>
 
-      {/* فرم افزودن تسک */}
-      <div className="card shadow-sm border-0 mb-4">
-        <div className="card-body">
+      <div className="card shadow-sm border-0 mb-4 rounded-4">
+        <div className="card-body p-4">
           <form className="row g-3" onSubmit={handleAddTask}>
-            <div className="col-md-6">
+            {/* فیلد عنوان */}
+            <div className="col-md-4">
+              <label className="form-label small fw-bold">Task Title</label>
               <input 
                 type="text" 
-                className="form-control" 
-                placeholder="What needs to be done?" 
+                className="form-control rounded-pill" 
+                placeholder="What to study?" 
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
               />
             </div>
-            <div className="col-md-4">
+            
+            {/* منوی انتخاب درس */}
+            <div className="col-md-3">
+              <label className="form-label small fw-bold">Course</label>
               <select 
-                className="form-select" 
+                className="form-select rounded-pill" 
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
               >
@@ -74,15 +83,26 @@ const Tasks = () => {
                 ))}
               </select>
             </div>
-            <div className="col-md-2">
-              <button type="submit" className="btn btn-primary w-100">Add Task</button>
+
+            {/* ۳. فیلد انتخاب زمان */}
+            <div className="col-md-3">
+              <label className="form-label small fw-bold">Start Time</label>
+              <input 
+                type="time" 
+                className="form-control rounded-pill" 
+                value={newTaskTime}
+                onChange={(e) => setNewTaskTime(e.target.value)}
+              />
+            </div>
+
+            <div className="col-md-2 d-flex align-items-end">
+              <button type="submit" className="btn btn-primary w-100 rounded-pill fw-bold">Add Task</button>
             </div>
           </form>
         </div>
       </div>
 
-      {/* لیست تسک‌ها */}
-      <div className="list-group shadow-sm">
+      <div className="list-group shadow-sm rounded-4 overflow-hidden">
         {tasks.length > 0 ? (
           tasks.map(task => (
             <TaskItem 
@@ -93,7 +113,10 @@ const Tasks = () => {
             />
           ))
         ) : (
-          <div className="p-4 text-center text-muted">No tasks yet. Add one above!</div>
+          <div className="p-5 text-center text-muted bg-white">
+             <i className="bi bi-clipboard-x display-4 opacity-25"></i>
+             <p className="mt-2">No tasks yet. Plan your day above!</p>
+          </div>
         )}
       </div>
     </div>
